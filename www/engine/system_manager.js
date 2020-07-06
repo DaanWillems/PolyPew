@@ -12,7 +12,7 @@ class SystemManager {
 
     }
 
-    update() {
-        this.systems.forEach(s => s.update());
+    update(dt) {
+        this.systems.forEach(s => s.update(dt));
     }
 }

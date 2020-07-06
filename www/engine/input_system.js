@@ -59,7 +59,6 @@ class InputSystem {
                 e.jumping++;
             }
 
-            console.log(e.dashCooldown);
             e.dashCooldown -= 0.1;
             if(e.dashCooldown < 0) {
                 e.dashCooldown = 0;

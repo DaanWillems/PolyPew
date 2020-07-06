@@ -1,4 +1,6 @@
 let renderSystem
+let now;
+let last;
 
 function main() {
 
@@ -11,6 +13,7 @@ function main() {
     systemManager.add(renderSystem);
     systemManager.add(inputSystem);
     systemManager.add(new PhysicsSystem(entityManager));
+    systemManager.add(new OnlineSystem(entityManager));
 
     var player = new Entity();
     player.components = ['camera', 'input', 'position', 'velocity', 'drag']
@@ -26,12 +29,15 @@ function main() {
     })
     entityManager.add(player);
 
+    last = 0;
+
     requestAnimationFrame(mainLoop);
 }
 
-
 function mainLoop(now) {
-    this.systemManager.update();
+    var deltaTime = now - last;
+    last = now;
+    this.systemManager.update(deltaTime);
     requestAnimationFrame(mainLoop);
 }
 
