@@ -1,0 +1,165 @@
+var mat4;
+
+class Renderer {
+    constructor() {
+        this.gl = null;
+        this.projectionMatrix = null;
+        this.program = null;
+        this.programInfo = null;
+        this.rotation = 0;
+    }
+
+    buildProjectionMatrix() {
+        const fieldOfView = 80 * Math.PI / 180;   // in radians
+        const aspect = this.gl.canvas.clientWidth / this.gl.canvas.clientHeight;
+        const zNear = 0.1;
+        const zFar = 100.0;
+        const projectionMatrix = glMatrix.mat4.create();
+
+        // note: glmatrix.js always has the first argument
+        // as the destination to receive the result.
+        glMatrix.mat4.perspective(projectionMatrix,
+            fieldOfView,
+            aspect,
+            zNear,
+            zFar);
+
+        return projectionMatrix;
+    }
+
+    clear() {
+        this.gl.clearColor(1.0, 1.0, 1.0, 1.0);  // Clear to black, fully opaque
+        this.gl.clearDepth(1.0);                 // Clear everything
+        this.gl.enable(this.gl.DEPTH_TEST);           // Enable depth testing
+        this.gl.depthFunc(this.gl.LEQUAL);            // Near things obscure far things
+
+        // Clear the canvas before we start drawing on it.
+
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    }
+
+    drawScene(entities, camera) {
+        this.clear();
+        const viewMatrix = glMatrix.mat4.create();
+
+        glMatrix.mat4.translate(viewMatrix, viewMatrix, camera.position);
+        glMatrix.mat4.rotate(viewMatrix, viewMatrix, camera.rotation[0] / 1000, [0, 1, 0]);
+        glMatrix.mat4.rotate(viewMatrix, viewMatrix, camera.rotation[1] / 1000, [1, 0, 0]);
+
+
+        var cameraFront = glMatrix.vec3.fromValues(0, 0, -1);
+        glMatrix.vec3.add(cameraFront, camera.position, cameraFront);
+        glMatrix.vec3.rotateX(cameraFront, cameraFront, camera.position, -(camera.rotation[1]));
+        glMatrix.vec3.rotateY(cameraFront, cameraFront, camera.position, -(camera.rotation[0]));
+
+        glMatrix.mat4.lookAt(viewMatrix, camera.position, cameraFront, [0, 1, 0]);
+
+
+
+        {
+            this.gl.cullFace(this.gl.BACK);
+            for (var index in entities) {
+                var entity = entities[index];
+
+                const modelMatrix = glMatrix.mat4.create();
+                glMatrix.mat4.translate(modelMatrix, modelMatrix, entity.position);
+
+                const normalMatrix = glMatrix.mat4.create();
+                glMatrix.mat4.invert(normalMatrix, modelMatrix);
+                glMatrix.mat4.transpose(normalMatrix, normalMatrix);
+
+                entity.mesh.vao.bind();
+
+                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, entity.mesh.indexBuffer);
+                this.testProgram.bind();
+
+                // Set the shader uniforms
+                this.testProgram.setUniformMatrix4f("uProjectionMatrix", this.projectionMatrix);
+                this.testProgram.setUniformMatrix4f("uViewMatrix", viewMatrix);
+                this.testProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
+                this.testProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
+
+                {
+                    const vertexCount = entity.mesh.vertexCount;
+                    const type = this.gl.UNSIGNED_SHORT;
+                    const offset = 0;
+                    this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+
+                }
+
+            }
+
+            this.gl.cullFace(this.gl.FRONT);
+            for (var index in entities) {
+                var entity = entities[index];
+
+                const modelMatrix = glMatrix.mat4.create();
+                glMatrix.mat4.translate(modelMatrix, modelMatrix, entity.position);
+
+                const normalMatrix = glMatrix.mat4.create();
+                glMatrix.mat4.invert(normalMatrix, modelMatrix);
+                glMatrix.mat4.transpose(normalMatrix, normalMatrix);
+
+                entity.mesh.vao.bind();
+
+                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, entity.mesh.indexBuffer);
+                this.toonProgram.bind();
+
+                // Set the shader uniforms
+                this.toonProgram.setUniformMatrix4f("uProjectionMatrix", this.projectionMatrix);
+                this.toonProgram.setUniformMatrix4f("uViewMatrix", viewMatrix);
+                this.toonProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
+                this.toonProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
+                this.toonProgram.setUniformMatrix4f("uScaleMatrix", this.scaleMatrix);
+
+                {
+                    const vertexCount = entity.mesh.vertexCount;
+                    const type = this.gl.UNSIGNED_SHORT;
+                    const offset = 0;
+                    this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+
+                }
+
+            }
+        }
+
+
+    }
+
+    init() {
+        const canvas = document.querySelector("#glCanvas");
+        this.gl = canvas.getContext("webgl2");
+        // canvas.width  = window.innerWidth;
+        // canvas.height = window.innerHeight;
+        // Only continue if WebGL is available and working
+        if (this.gl === null) {
+            alert("Unable to initialize WebGL. Your browser or machine may not support it.");
+            return;
+        }
+
+        this.gl.enable(this.gl.CULL_FACE);
+
+        // Set clear color to black, fully opaque
+        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // Clear the color buffer with specified clear color
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        this.projectionMatrix = this.buildProjectionMatrix();
+
+        this.toonProgram = new ShaderProgram(vsToonSource, fsToonSource);
+        this.toonProgram.createUniformMatrix4f('uProjectionMatrix');
+        this.toonProgram.createUniformMatrix4f('uModelMatrix');
+        this.toonProgram.createUniformMatrix4f('uViewMatrix');
+        this.toonProgram.createUniformMatrix4f('uNormalMatrix');
+        this.toonProgram.createUniformMatrix4f('uScaleMatrix');
+        this.scaleMatrix = glMatrix.mat4.create();
+        var scaleFactor = 0.01
+        glMatrix.mat4.scale(this.scaleMatrix, this.scaleMatrix, [1+scaleFactor, 1+scaleFactor, 1+scaleFactor]);
+        glMatrix.mat4.translate(this.scaleMatrix, this.scaleMatrix, [-scaleFactor/2, -scaleFactor/2, -scaleFactor/2]);
+
+        this.testProgram = new ShaderProgram(vsSource, fsSource);
+        this.testProgram.createUniformMatrix4f('uProjectionMatrix');
+        this.testProgram.createUniformMatrix4f('uModelMatrix');
+        this.testProgram.createUniformMatrix4f('uViewMatrix');
+        this.testProgram.createUniformMatrix4f('uNormalMatrix');
+    }
+}
