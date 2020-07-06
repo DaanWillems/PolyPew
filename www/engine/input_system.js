@@ -16,12 +16,10 @@ class InputSystem {
             },
 
             onKeydown: function (event) {
-                console.log("Down!" + event.keyCode);
                 this._pressed[event.keyCode] = true;
             },
 
             onKeyup: function (event) {
-                console.log("Up!" + event.keyCode);
                 delete this._pressed[event.keyCode];
             }
         };

@@ -15,7 +15,6 @@ class OnlineSystem {
 
         this.conn.onmessage = function (evt) {
             var update = JSON.parse(evt.data);
-            console.log(update);
             if (update.id != id) {
                 if (self.entityManager.entities["player"] == null) {
                     var player = loadModel('my_cube.obj');
@@ -27,7 +26,6 @@ class OnlineSystem {
                 }
                 self.entityManager.entities["player"].forEach(p => {
                     if (p.id == update.id) {
-                        console.log("updating")
                         p.position[0] = update.x;
                         p.position[1] = update.y;
                         p.position[2] = update.z;
@@ -51,7 +49,6 @@ class OnlineSystem {
 
         if (this.wait < 0) {
             this.wait = this.interval;
-            console.log("Sending");
 
             if (this.conn.readyState == WebSocket.OPEN) {
                 var msg = JSON.stringify({
