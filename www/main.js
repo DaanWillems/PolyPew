@@ -17,7 +17,7 @@ function main() {
 
     var player = new Entity();
     player.components = ['camera', 'input', 'position', 'velocity', 'drag']
-    player.position = glMatrix.vec3.fromValues(0, 2, 0);
+    player.position = glMatrix.vec3.fromValues(0, 20, 0);
     player.delta = glMatrix.vec3.fromValues(0, 0, 0);
     player.rotation = glMatrix.vec3.fromValues(0, 0, 0)
     player.jumping = 0;
