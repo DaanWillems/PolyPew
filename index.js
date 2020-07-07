@@ -4,15 +4,17 @@ var http = require('http').createServer(app);
 const WebSocket = require('ws');
 
 var netcodeClient = require('./netcode/client')
-var netcodeState = require('./netcode/state')
+var hub = require('./netcode/hub')
 
 const wss = new WebSocket.Server({ port: 8000 });
 
 var clients = [];
 
+var hub = new hub.Hub(clients);
+
 wss.on('connection', function connection(ws) {
   console.log("New connection")
-  clients.push(new netcodeClient.Client(ws));
+  clients.push(new netcodeClient.Client(ws, hub));
 });
 
 
@@ -20,7 +22,7 @@ setInterval(function() {
   if(clients.length == 0) {
     return;
   }
-  netcodeState.sendState(clients, wss);
+  hub.sendState(clients, wss);
 }, 9);
 
 app.use(express.static('www'))

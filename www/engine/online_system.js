@@ -3,19 +3,43 @@ class OnlineSystem {
         this.entityManager = entityManager;
         this.id = Math.floor(Math.random() * Math.floor(200));
 
-        this.conn = new WebSocket("ws://78.141.219.233:8000");
+        this.conn = new WebSocket("ws://localhost:8000");
         this.conn.binaryType = 'arraybuffer';
         this.conn.onclose = function (evt) {
             console.log("Connection closed");
         };
+
         var id = this.id;
         console.log("My ID: " + id);
+
+        this.conn.onopen = evt => {
+            var idBuf = new ArrayBuffer(8);
+            var idArr = new Int32Array(idBuf);
+            idArr[0] = 0;
+            idArr[1] = this.id;
+
+            this.conn.send(idBuf)
+        }
+
         var self = this;
         this.entityManager.entities["player"] = [];
         this.interval = 16;
         this.wait = 0;
 
+        this.x = 0;
+        this.buffer = new ArrayBuffer(20);
+        this.contentBuffer = new Float32Array(this.buffer);
+        this.prefixBuffer = new Int32Array(this.buffer);
+        this.prefixBuffer[1] = this.id;
+
         this.conn.onmessage = function (evt) {
+            if (evt.data.byteLength < 10) {
+                var content = new Int32Array(evt.data);
+                console.log(evt.data);
+                self.entityManager.delete(content[1]);
+                return;
+            }
+
             var position = new Float32Array(evt.data);
             var id = new Int32Array(evt.data);
 
@@ -28,7 +52,7 @@ class OnlineSystem {
                 self.entityManager.entities["player"].forEach(p => {
                     if (p.id == id[i]) {
                         p.position[0] = position[i + 1];
-                        p.position[1] = position[i + 2]-1;
+                        p.position[1] = position[i + 2] - 1;
                         p.position[2] = position[i + 3];
                         found = true;
                         return;
@@ -47,11 +71,6 @@ class OnlineSystem {
             }
         };
 
-        this.x = 0;
-        this.buffer = new ArrayBuffer(20);
-        this.contentBuffer = new Float32Array(this.buffer);
-        this.prefixBuffer = new Int32Array(this.buffer);
-        this.prefixBuffer[1] = this.id;
     }
 
     update(deltaTime) {

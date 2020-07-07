@@ -22,10 +22,12 @@ function main() {
     player.rotation = glMatrix.vec3.fromValues(0, 0, 0)
     player.jumping = 0;
     player.dashCooldown = 0;
+    player.id = 0;
 
     var map = new Map();
     map.objects.forEach(e => {
         entityManager.add(e);
+        e.id = 0;
     })
     entityManager.add(player);
 
