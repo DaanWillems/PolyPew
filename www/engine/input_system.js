@@ -96,9 +96,6 @@ class InputSystem {
             e.position[1] += delta[1];
             if (e.position[1] < 0) {
                 e.position[1] = 0;
-                if(e.delta[1] < -0.02) {
-                    e.delta[1] = -e.delta[1]*0.9;
-                }
             }
 
             e.position[2] += delta[2];
