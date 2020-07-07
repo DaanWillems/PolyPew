@@ -24,6 +24,7 @@ class OnlineSystem {
                 if (id[i] == self.id) {
                     continue;
                 }
+
                 self.entityManager.entities["player"].forEach(p => {
                     if (p.id == id[i]) {
                         p.position[0] = position[i + 1];
@@ -33,8 +34,9 @@ class OnlineSystem {
                         return;
                     }
                 })
+
                 if (!found) {
-                    var player = loadModel('my_cube.obj');
+                    var player = loadModel('sphere.obj');
                     player.components.push('player');
                     player.id = id[i];
                     player.position = glMatrix.vec3.fromValues(0, 2, 0);
@@ -44,6 +46,7 @@ class OnlineSystem {
                 }
             }
         };
+
         this.x = 0;
         this.buffer = new ArrayBuffer(20);
         this.contentBuffer = new Float32Array(this.buffer);

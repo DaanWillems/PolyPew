@@ -89,7 +89,7 @@ function loadModel(name) {
         20, 21, 22, 20, 22, 23,   // left
     ];
 
-    var objStr = loadFile('models/test.obj')
+    var objStr = loadFile('models/'+name)
     // var testObj = loadFile("localhost/test.obj")
     // var objStr = document.getElementById(name).innerHTML;
     var mesh = new OBJ.Mesh(objStr);

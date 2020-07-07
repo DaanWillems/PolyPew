@@ -3,7 +3,7 @@ class Client {
     constructor(ws) {
         this.ws = ws;
         ws.on('message', msg => {
-            this.receiveUpdate(msg)
+            this.receiveUpdate(msg);
         });
         this.state = new Float32Array(new ArrayBuffer(12));
     }
