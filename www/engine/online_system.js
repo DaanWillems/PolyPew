@@ -3,7 +3,7 @@ class OnlineSystem {
         this.entityManager = entityManager;
         this.id = Math.floor(Math.random() * Math.floor(200));
 
-        this.conn = new WebSocket("ws://78.141.219.233:8000");
+        this.conn = new WebSocket("ws://localhost:8000");
         this.conn.binaryType = 'arraybuffer';
         this.conn.onclose = function (evt) {
             console.log("Connection closed");
@@ -27,7 +27,7 @@ class OnlineSystem {
                 self.entityManager.entities["player"].forEach(p => {
                     if (p.id == id[i]) {
                         p.position[0] = position[i + 1];
-                        p.position[1] = position[i + 2];
+                        p.position[1] = position[i + 2]-1;
                         p.position[2] = position[i + 3];
                         found = true;
                         return;
