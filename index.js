@@ -21,7 +21,7 @@ setInterval(function() {
     return;
   }
   netcodeState.sendState(clients, wss);
-}, 18);
+}, 9);
 
 app.use(express.static('www'))
 
