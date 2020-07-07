@@ -35,7 +35,7 @@ class OnlineSystem {
                     }
                 })
 
-                if (!found) {
+                if (!found && id[i] != 0) {
                     var player = loadModel('sphere.obj');
                     player.components.push('player');
                     player.id = id[i];
