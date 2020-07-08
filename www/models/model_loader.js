@@ -90,11 +90,7 @@ function loadModel(name) {
     ];
 
     var objStr = loadFile('models/'+name)
-    // var testObj = loadFile("localhost/test.obj")
-    // var objStr = document.getElementById(name).innerHTML;
     var mesh = new OBJ.Mesh(objStr);
-    // OBJ.downloadMeshes({"test": "test.obj"})
-    // print()
 
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
