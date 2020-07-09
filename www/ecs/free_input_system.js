@@ -1,5 +1,8 @@
-class InputSystem {
+class FreeInputSystem {
     constructor(entityManager) {
+        const canvas = document.querySelector("#glCanvas");
+        this.gl = canvas.getContext("webgl2");
+        this.locked = false;
         this.entityManager = entityManager;
         this.key = {
             _pressed: {},
@@ -8,7 +11,9 @@ class InputSystem {
             UP: 87,
             RIGHT: 68,
             DOWN: 83,
-            SPACE: 32,
+            ASCEND: 32,
+            DESCEND: 67,
+            ESC: 27,
             Q: 81,
 
             isDown: function (keyCode) {
@@ -16,6 +21,7 @@ class InputSystem {
             },
 
             onKeydown: function (event) {
+                console.log(event.keyCode);
                 this._pressed[event.keyCode] = true;
             },
 
@@ -34,37 +40,69 @@ class InputSystem {
 
         window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
         window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
+        
         document.onmousemove = function (e) {
-            rotation.dx += (e.movementX / 500);
-            rotation.dy += (e.movementY / 500);
+            rotation.dx += (e.movementX / 3000);
+            rotation.dy += (e.movementY / 3000);
         }
-        document.body.onclick = document.body.requestPointerLock ||
-            document.body.mozRequestPointerLock ||
-            document.body.webkitRequestPointerLock;
 
+        if ("onpointerlockchange" in document) {
+            document.addEventListener('pointerlockchange', () => {
+                this.lockChangeAlert();
+            }, false);
+        } else if ("onmozpointerlockchange" in document) {
+            document.addEventListener('mozpointerlockchange', () => {
+                this.lockChangeAlert();
+            }, false);
+        }
     }
 
-    update() {
+    init(stateMachine) {
+        this.stateMachine = stateMachine;
+    }
+
+    lockChangeAlert() {
+        if(document.pointerLockElement === document.body ||
+        document.mozPointerLockElement === document.body) {
+            this.locked = true;
+        } else {
+            if(this.locked && this.stateMachine.currentState.constructor.name == "GameState") {
+                this.stateMachine.changeState("mainMenu");
+            }
+            this.locked = false;
+        }
+    }
+
+    update(deltaTime) {
+        if(this.key._pressed[this.key.ESC]) {
+            stateMachine.changeState("mainMenu");
+            return;
+        }
+
+        if(!this.locked) {
+            return;
+        }
+
         this.entityManager.entities["camera"].forEach(e => {
             if (e.position[1] <= 0) {
                 e.jumping = 0;
             }
 
-            if (this.key._pressed[this.key.SPACE] && e.jumping < 2) {
-                e.delta[1] = 0.25;
-                e.delta[2] *= 1.5;
-                e.delta[0] *= 1.5;
-                e.jumping++;
+            if (this.key._pressed[this.key.ASCEND]) {
+                if (e.delta[1] > -0.3) {
+                    e.delta[1] += 0.05;
+                }            
             }
 
-            e.dashCooldown -= 0.1;
-            if(e.dashCooldown < 0) {
-                e.dashCooldown = 0;
+            if (this.key._pressed[this.key.Q]) {
+                document.body.exitPointerLock    ||
+                           document.body.mozExitPointerLock;
             }
-            if (this.key._pressed[this.key.Q] && e.dashCooldown <= 0) {
-                e.delta[2] *= 12;
-                e.delta[0] *= 12;
-                e.dashCooldown = 10;
+
+            if (this.key._pressed[this.key.DESCEND]) {
+                if (e.delta[1] > -0.3) {
+                    e.delta[1] -= 0.05;
+                }            
             }
 
             if (this.key._pressed[this.key.LEFT]) {

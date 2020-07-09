@@ -6,7 +6,10 @@ uniform mat4 uViewMatrix;
 uniform mat4 uModelMatrix;
 uniform mat4 uProjectionMatrix;
 uniform mat4 uNormalMatrix;
+uniform vec3 uColor;
 varying highp vec3 vLighting;
+
+
 void main() {
   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * aVertexPosition;
 
@@ -17,7 +20,7 @@ void main() {
   highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
 
   highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-  vLighting = ambientLight + (directionalLightColor * directional);
+  vLighting = uColor + (directionalLightColor * directional);
 }
 `;
 
@@ -43,8 +46,8 @@ void main() {
   float scaleFactor = 0.005;
 
   highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
-  vec4 newPosition = uProjectionMatrix*transformedNormal*scaleFactor;	
 
+  vec4 newPosition = (aVertexPosition+vec4(aVertexNormal, 1.0)*0.1);
   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * uScaleMatrix * aVertexPosition;
 }
 `;

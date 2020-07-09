@@ -5,6 +5,10 @@ class RenderSystem {
         this.renderer.init();
     }
 
+    init(stateMachine) {
+        this.stateMachine = stateMachine;
+    }
+
     update(deltaTime) {
         this.renderer.drawScene(this.entityManager.entities["render"], this.entityManager.entities["camera"][0]);
     }

@@ -73,6 +73,10 @@ class OnlineSystem {
 
     }
 
+    init(stateMachine) {
+        this.stateMachine = stateMachine;
+    }
+
     update(deltaTime) {
         this.wait -= deltaTime;
 

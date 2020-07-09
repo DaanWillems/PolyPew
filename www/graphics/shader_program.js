@@ -29,6 +29,16 @@ class ShaderProgram {
     return this.gl.getAttribLocation(this.shaderProgramID, name);
   }
 
+  createUniformVec3f(name) {
+    this.uniforms[name] = this.gl.getUniformLocation(this.shaderProgramID, name);
+  }
+
+  setUniformVec3f(name, value) {
+    this.gl.uniform3fv(
+      this.uniforms[name],
+      value);
+  }
+
   createUniformMatrix4f(name) {
     this.uniforms[name] = this.gl.getUniformLocation(this.shaderProgramID, name);
   }
