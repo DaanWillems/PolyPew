@@ -35,7 +35,6 @@ class OnlineSystem {
         this.conn.onmessage = function (evt) {
             if (evt.data.byteLength < 10) {
                 var content = new Int32Array(evt.data);
-                console.log(evt.data);
                 self.entityManager.delete(content[1]);
                 return;
             }

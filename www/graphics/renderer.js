@@ -9,16 +9,32 @@ class Renderer {
         this.rotation = 0;
 
         window.addEventListener('resize', () => {
-            this.gl.canvas.width  = window.innerWidth;
-            this.gl.canvas.height = window.innerHeight;
-            this.buildProjectionMatrix();
+            this.resize();
         });
 
     }
 
+    resize() {
+        const canvas = document.querySelector("#glCanvas");
+
+        this.gl.canvas.width = canvas.clientWidth;
+        this.gl.canvas.height = canvas.clientHeight
+        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+        console.log("Size: " + window.innerWidth + " " + window.innerHeight);
+        console.log("Canvas Size: " + this.gl.canvas.width + " " + this.gl.canvas.height);
+
+        this.gl = canvas.getContext("webgl2");
+        if (this.gl === null) {
+            alert("Unable to initialize WebGL after resizing. Your browser or machine may not support it.");
+            return;
+        }
+        this.projectionMatrix = this.buildProjectionMatrix();
+    }
+
     buildProjectionMatrix() {
         const fieldOfView = 60 * Math.PI / 180;   // in radians
-        const aspect = this.gl.canvas.clientWidth / this.gl.canvas.clientHeight;
+        console.log("Size: " + window.innerWidth + " " + window.innerHeight);
+        const aspect = window.innerWidth / window.innerHeight;
         const zNear = 0.1;
         const zFar = 800.0;
         const projectionMatrix = glMatrix.mat4.create();
@@ -39,9 +55,6 @@ class Renderer {
         this.gl.clearDepth(1.0);                 // Clear everything
         this.gl.enable(this.gl.DEPTH_TEST);           // Enable depth testing
         this.gl.depthFunc(this.gl.LEQUAL);            // Near things obscure far things
-
-        // Clear the canvas before we start drawing on it.
-
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
 
@@ -64,7 +77,7 @@ class Renderer {
 
         const type = this.gl.UNSIGNED_SHORT;
         const offset = 0;
-        {   
+        {
             this.gl.cullFace(this.gl.BACK);
             this.testProgram.bind();
             this.testProgram.setUniformMatrix4f("uViewMatrix", viewMatrix);
@@ -73,7 +86,7 @@ class Renderer {
             for (var index in entities) {
                 var entity = entities[index];
 
-                if(entity.animate) {
+                if (entity.animate) {
                     entity.rotation[1] += 0.01;
                 }
 
@@ -86,8 +99,8 @@ class Renderer {
                 const normalMatrix = glMatrix.mat4.create();
                 glMatrix.mat4.invert(normalMatrix, modelMatrix);
                 glMatrix.mat4.transpose(normalMatrix, normalMatrix);
-                
-                if(index == 0 || entity.meshName != entities[index-1].meshName) {
+
+                if (index == 0 || entity.meshName != entities[index - 1].meshName) {
                     entity.mesh.vao.bind();
                     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, entity.mesh.indexBuffer);
                 }
@@ -105,7 +118,7 @@ class Renderer {
                 }
 
             }
-            
+
             // this.gl.cullFace(this.gl.FRONT);
             // this.toonProgram.bind();
             // this.toonProgram.setUniformMatrix4f("uScaleMatrix", this.scaleMatrix);
@@ -133,7 +146,7 @@ class Renderer {
 
             //     {
             //         const vertexCount = entity.mesh.vertexCount;
-     
+
             //         this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
 
             //     }
@@ -147,10 +160,8 @@ class Renderer {
     init() {
         const canvas = document.querySelector("#glCanvas");
         this.gl = canvas.getContext("webgl2");
-        this.gl.canvas.width  = window.innerWidth;
+        this.gl.canvas.width = window.innerWidth;
         this.gl.canvas.height = window.innerHeight;
-        // canvas.width  = window.innerWidth;
-        // canvas.height = window.innerHeight;
         // Only continue if WebGL is available and working
         if (this.gl === null) {
             alert("Unable to initialize WebGL. Your browser or machine may not support it.");
@@ -173,7 +184,7 @@ class Renderer {
         this.toonProgram.createUniformMatrix4f('uScaleMatrix');
         this.scaleMatrix = glMatrix.mat4.create();
         var scaleFactor = 0.0025;
-        glMatrix.mat4.scale(this.scaleMatrix, this.scaleMatrix, [1+scaleFactor, 1+scaleFactor, 1+scaleFactor]);
+        glMatrix.mat4.scale(this.scaleMatrix, this.scaleMatrix, [1 + scaleFactor, 1 + scaleFactor, 1 + scaleFactor]);
         // glMatrix.mat4.translate(this.scaleMatrix, this.scaleMatrix, [-0.5, -(1+scaleFactor), -(1+scaleFactor)]);
 
         this.testProgram = new ShaderProgram(vsSource, fsSource);
@@ -182,5 +193,7 @@ class Renderer {
         this.testProgram.createUniformMatrix4f('uViewMatrix');
         this.testProgram.createUniformVec3f('uColor');
         this.testProgram.createUniformMatrix4f('uNormalMatrix');
+
+        this.resize();
     }
 }
