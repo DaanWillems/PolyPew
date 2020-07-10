@@ -79,7 +79,9 @@ class Renderer {
 
                 const modelMatrix = glMatrix.mat4.create();
                 glMatrix.mat4.translate(modelMatrix, modelMatrix, entity.position);
+                glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[0], [1, 0, 0]);
                 glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[1], [0, 1, 0]);
+                glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[2], [0, 0, 1]);
 
                 const normalMatrix = glMatrix.mat4.create();
                 glMatrix.mat4.invert(normalMatrix, modelMatrix);

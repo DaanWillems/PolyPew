@@ -17,6 +17,7 @@
 <script src="ecs/free_physics_system.js"></script>
 <script src="statemachine/state_machine.js"></script>
 <script src="statemachine/states/game_state.js"></script>
+<script src="statemachine/states/loading_state.js"></script>
 <script src="statemachine/states/main_menu_state.js"></script>
 <script src="statemachine/states/pause_menu_state.js"></script>
 <script src="main.js"></script>
@@ -29,11 +30,20 @@
     <canvas id="glCanvas" width="1920" height="1080"></canvas>
     <div class="menu-overlay" id="main-menu">
         <div class="button-column">
-            <div class="button" id="start-game-action">
-                test
+            <div class="small-filler">
+
             </div>
-            <div class="button">
-                test
+            <div class="button" id="start-game-action">
+                Play
+            </div>
+            <div class="filler">
+
+            </div>
+            <div class="button button-end">
+                Settings
+            </div>
+            <div class="small-filler">
+
             </div>
         </div>
     </div>

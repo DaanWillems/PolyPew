@@ -9,6 +9,7 @@ function main() {
 
     last = 0;
     this.stateMachine = new StateMachine();
+    this.stateMachine.addState("loading", new LoadingState());
     this.stateMachine.addState("mainMenu", new MainMenuState());
     this.stateMachine.addState("game", new GameState());
     this.stateMachine.changeState("mainMenu");
