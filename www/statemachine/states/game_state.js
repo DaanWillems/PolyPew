@@ -6,7 +6,7 @@ class GameState {
         this.systemManager.add(new RenderSystem(this.entityManager));
         this.systemManager.add(new FreeInputSystem(this.entityManager));
         this.systemManager.add(new FreePhysicsSystem(this.entityManager));
-        // this.systemManager.add(new OnlineSystem(this.entityManager));
+        this.systemManager.add(new OnlineSystem(this.entityManager));
     
         var player = new Entity();
         player.components = ['camera', 'input', 'position', 'velocity', 'drag']
