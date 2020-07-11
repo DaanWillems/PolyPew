@@ -34,7 +34,6 @@ class Renderer {
 
     buildProjectionMatrix() {
         const fieldOfView = 60 * Math.PI / 180;   // in radians
-        console.log("Size: " + window.innerWidth + " " + window.innerHeight);
         const aspect = window.innerWidth / window.innerHeight;
         const zNear = 0.1;
         const zFar = 800.0;
@@ -59,7 +58,7 @@ class Renderer {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
 
-    drawScene(entities, camera) {
+    drawScene(entities, camera, octree) {
         this.clear();
         const viewMatrix = glMatrix.mat4.create();
 
@@ -88,7 +87,9 @@ class Renderer {
                 var entity = entities[index];
 
                 if (entity.animate) {
-                    entity.rotation[1] += 0.01;
+                    entity.position[0] += 0.01;
+                    entity.needsUpdate = true;
+                    entity.boundingBox.setPosition(entity.position);
                 }
 
                 const modelMatrix = glMatrix.mat4.create();
@@ -155,13 +156,20 @@ class Renderer {
 
             // }
 
-            if(!this.renderBoundingBoxes) {
+
+            if (octree) {
+                var octree = octree[0];
+                this.renderOctree(octree.octree);
+            }
+
+
+            if (!this.renderBoundingBoxes) {
                 return;
             }
 
             for (var index in entities) {
                 var entity = entities[index];
-                if(!entity.boundingBox) {
+                if (!entity.boundingBox) {
                     return;
                 }
                 var box = entity.boundingBox;
@@ -186,7 +194,7 @@ class Renderer {
                 this.testProgram.setUniformVec3f("uColor", entity.color);
 
                 {
-                    const vertexCount = entity.mesh.vertexCount;
+                    const vertexCount = this.boundingCube.mesh.vertexCount;
                     this.gl.drawElements(this.gl.LINE_STRIP, vertexCount, type, offset);
                 }
 
@@ -194,6 +202,35 @@ class Renderer {
         }
 
 
+    }
+
+    renderOctree(octree) {
+        const type = this.gl.UNSIGNED_SHORT;
+        const offset = 0;
+
+        octree.children.forEach(c => {
+            if (c) {
+                this.renderOctree(c);
+            }
+        })
+
+        const modelMatrix = glMatrix.mat4.create();
+        glMatrix.mat4.translate(modelMatrix, modelMatrix, octree.region.center);
+        glMatrix.mat4.mul(modelMatrix, modelMatrix, octree.region.scaleMatrix);
+
+        const normalMatrix = glMatrix.mat4.create();
+        glMatrix.mat4.invert(normalMatrix, modelMatrix);
+        glMatrix.mat4.transpose(normalMatrix, normalMatrix);
+
+        // Set the shader uniforms
+        this.testProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
+        this.testProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
+        this.testProgram.setUniformVec3f("uColor", [0, 0, 0]);
+
+        {
+            const vertexCount = this.boundingCube.mesh.vertexCount;
+            this.gl.drawElements(this.gl.LINE_STRIP, vertexCount, type, offset);
+        }
     }
 
     init() {

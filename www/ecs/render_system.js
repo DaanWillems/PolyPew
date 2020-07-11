@@ -10,6 +10,9 @@ class RenderSystem {
     }
 
     update(deltaTime) {
-        this.renderer.drawScene(this.entityManager.entities["render"], this.entityManager.entities["camera"][0]);
+        if(this.entityManager.entities["octree"]) {
+            this.entityManager.entities["octree"][0].octree.update();
+        }
+        this.renderer.drawScene(this.entityManager.entities["render"], this.entityManager.entities["camera"][0], this.entityManager.entities["octree"]);
     }
 }

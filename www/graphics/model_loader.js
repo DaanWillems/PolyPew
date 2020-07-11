@@ -44,6 +44,7 @@ function loadModel(name) {
     model.components = ['render', 'position', 'velocity']
     model.animate = false;
     model.boundingBox = BoundingBox.fromVertices(mesh.vertices);
+    model.needsUpdate = true;
 
     var r = Math.floor(Math.random() * Math.floor(100))/100;
     var g = Math.floor(Math.random() * Math.floor(100))/100;

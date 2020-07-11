@@ -66,7 +66,7 @@ class FreeInputSystem {
             this.locked = true;
         } else {
             if(this.locked && this.stateMachine.currentState.constructor.name == "GameState") {
-                this.stateMachine.changeState("mainMenu");
+                // this.stateMachine.changeState("mainMenu");
             }
             this.locked = false;
         }
@@ -74,7 +74,7 @@ class FreeInputSystem {
 
     update(deltaTime) {
         if(this.key._pressed[this.key.ESC]) {
-            stateMachine.changeState("mainMenu");
+            // stateMachine.changeState("mainMenu");
             return;
         }
 

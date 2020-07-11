@@ -5,38 +5,43 @@ class Map {
         var x = 0;
         var y = 0;
 
-        // for(var i = -9; i < 11; i++) {
-            for(var j = -9; j < 11; j++) {
-                for(var z = -9; z < 11; z++) {
-                    var entity = loadModel('mathijs.obj');
-                    entity.position[0] = j*4;
-                    entity.position[1] = 0;
-                    entity.position[2] = z*4;
-                    entity.animate = true;
-                    this.objects.push(entity);
-                }
-            }
-        // }
-        // var x = -10;
-        // for(var i = -9; i < 100; i++) {
-        //     entity = loadModel('cube20x1x20.obj');
-        //     entity.position[0] = x;
-        //     entity.position[1] = i*2;
-        //     entity.position[2] = 0;
-        //     x = -x;
-        //     entity.animate = true;
-        //     this.objects.push(entity);
+        this.octree = new Octree(null, new BoundingBox(glMatrix.vec3.fromValues(-10, -10, -10), glMatrix.vec3.fromValues(10, 10, 10)));
+
+        var entity = loadModel('cube1x1x1.obj');
+        entity.position[0] = -5.7;
+        entity.position[1] = 9.2;
+        entity.position[2] = 8.2;
+        entity.animate = true;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+        
+        entity = loadModel('cube1x1x1.obj');
+        entity.position[0] = -6.7;
+        entity.position[1] = 9.2;
+        entity.position[2] = 8.2;
+        entity.animate = true;
+        entity.boundingBox.setPosition(entity.position);
+
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+
+        var octreeEntity = new Entity();
+        octreeEntity.octree = this.octree;
+        octreeEntity.components = ['octree']
+        this.objects.push(octreeEntity);
+
+        // for (var j = -9; j < 11; j++) {
+            // for (var z = 1; z < 3; z++) {
+            //     var entity = loadModel('mathijs.obj');
+            //     entity.position[0] = 0;
+            //     entity.position[1] = 0;
+            //     entity.position[2] = z * 4;
+            //     entity.animate = true;
+            //     this.objects.push(entity);
+            //     // this.octree.insert(entity);
+            // }
         // }
 
-        // var x = -10;
-        // for(var i = -9; i < 100; i++) {
-        //     entity = loadModel('cube20x1x20.obj');
-        //     entity.position[0] = x+50;
-        //     entity.position[1] = i*2;
-        //     entity.position[2] = 0;
-        //     x = -x;
-        //     entity.animate = true;
-        //     this.objects.push(entity);
-        // }
     }
 }
