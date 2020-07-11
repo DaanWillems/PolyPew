@@ -21,7 +21,7 @@ class MainMenuState {
         player.id = 0;
     
 
-        this.cube = loadModel('cube1x1x1.obj');
+        this.cube = loadModel('cube2x2x2.obj');
         this.cube.position[0] = 0;
         this.cube.position[1] = 0;
         this.cube.position[2] = -7;
@@ -34,7 +34,6 @@ class MainMenuState {
 
         this.time = 0;
         this.rgb = glMatrix.vec3.fromValues(0.5, 0.8, 0.1);
-        console.log(this.rgb);
         this.cube.color = this.rgb;
 
         this.rInc = 0.001;
@@ -49,8 +48,6 @@ class MainMenuState {
         this.cube.rotation[0] += 0.0001*dt;
         this.cube.rotation[1] += 0.0003*dt;
         this.cube.rotation[2] += 0.0002*dt;
-
-    
 
         this.cube.color[0] += this.rInc;
         if(this.cube.color[0] > 1) {

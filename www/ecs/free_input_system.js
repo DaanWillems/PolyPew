@@ -21,7 +21,6 @@ class FreeInputSystem {
             },
 
             onKeydown: function (event) {
-                console.log(event.keyCode);
                 this._pressed[event.keyCode] = true;
             },
 

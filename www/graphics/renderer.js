@@ -12,6 +12,9 @@ class Renderer {
             this.resize();
         });
 
+
+        this.boundingCube = loadModel('cube1x1x1.obj');
+        this.renderBoundingBoxes = false;
     }
 
     resize() {
@@ -20,8 +23,6 @@ class Renderer {
         this.gl.canvas.width = canvas.clientWidth;
         this.gl.canvas.height = canvas.clientHeight
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-        console.log("Size: " + window.innerWidth + " " + window.innerHeight);
-        console.log("Canvas Size: " + this.gl.canvas.width + " " + this.gl.canvas.height);
 
         this.gl = canvas.getContext("webgl2");
         if (this.gl === null) {
@@ -114,7 +115,43 @@ class Renderer {
                 {
                     const vertexCount = entity.mesh.vertexCount;
                     this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+                }
 
+            }
+
+            if(!this.renderBoundingBoxes) {
+                return;
+            }
+
+            for (var index in entities) {
+                var entity = entities[index];
+                if(!entity.boundingBox) {
+                    return;
+                }
+                var box = entity.boundingBox;
+
+                const modelMatrix = glMatrix.mat4.create();
+                glMatrix.mat4.translate(modelMatrix, modelMatrix, entity.position);
+                glMatrix.mat4.mul(modelMatrix, modelMatrix, box.scaleMatrix);
+
+                const normalMatrix = glMatrix.mat4.create();
+                glMatrix.mat4.invert(normalMatrix, modelMatrix);
+                glMatrix.mat4.transpose(normalMatrix, normalMatrix);
+
+                if (index == 0 || entity.meshName != entities[index - 1].meshName) {
+                    this.boundingCube.mesh.vao.bind();
+                    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, entity.mesh.indexBuffer);
+                }
+
+
+                // Set the shader uniforms
+                this.testProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
+                this.testProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
+                this.testProgram.setUniformVec3f("uColor", entity.color);
+
+                {
+                    const vertexCount = entity.mesh.vertexCount;
+                    this.gl.drawElements(this.gl.LINE_STRIP, vertexCount, type, offset);
                 }
 
             }

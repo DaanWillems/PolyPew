@@ -32,7 +32,7 @@ function loadModel(name) {
         vao.addVertexBuffer(positionBuffer, 3, gl.FLOAT, false, 0, 0, 0)
         vao.addVertexBuffer(normalBuffer, 3, gl.FLOAT, false, 0, 0, 1)
         
-        mesh = new Mesh(vao, indexBuffer, positionBuffer, normalBuffer, mesh.indices.length);
+        mesh = new Mesh(vao, indexBuffer, positionBuffer, normalBuffer, mesh.indices.length, mesh.vertices);
         meshes[name] = mesh;
     }
 
@@ -43,6 +43,8 @@ function loadModel(name) {
     model.rotation = glMatrix.vec3.fromValues(0, 0, 0);
     model.components = ['render', 'position', 'velocity']
     model.animate = false;
+    // model.boundingBox = BoundingBox.fromVertices(mesh.vertices);
+
     var r = Math.floor(Math.random() * Math.floor(100))/100;
     var g = Math.floor(Math.random() * Math.floor(100))/100;
     var b = Math.floor(Math.random() * Math.floor(100))/100;

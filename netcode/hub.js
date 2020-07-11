@@ -9,7 +9,6 @@ class Hub {
         const array = new Int32Array(2);
         array[0] = 2;
         array[1] = id;
-        console.log(array);
         this.clients.forEach(c => {
             c.ws.send(array);
         });
