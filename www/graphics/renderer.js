@@ -14,7 +14,7 @@ class Renderer {
 
 
         this.boundingCube = loadModel('cube1x1x1.obj');
-        this.renderBoundingBoxes = false;
+        this.renderBoundingBoxes = true;
     }
 
     resize() {

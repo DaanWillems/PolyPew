@@ -43,7 +43,7 @@ function loadModel(name) {
     model.rotation = glMatrix.vec3.fromValues(0, 0, 0);
     model.components = ['render', 'position', 'velocity']
     model.animate = false;
-    // model.boundingBox = BoundingBox.fromVertices(mesh.vertices);
+    model.boundingBox = BoundingBox.fromVertices(mesh.vertices);
 
     var r = Math.floor(Math.random() * Math.floor(100))/100;
     var g = Math.floor(Math.random() * Math.floor(100))/100;
