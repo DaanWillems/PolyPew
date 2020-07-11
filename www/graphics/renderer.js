@@ -14,7 +14,7 @@ class Renderer {
 
 
         this.boundingCube = loadModel('cube1x1x1.obj');
-        this.renderBoundingBoxes = true;
+        this.renderBoundingBoxes = false;
     }
 
     resize() {
@@ -119,6 +119,42 @@ class Renderer {
 
             }
 
+            // this.gl.cullFace(this.gl.FRONT);
+            // this.toonProgram.bind();
+            // this.toonProgram.setUniformMatrix4f("uScaleMatrix", this.scaleMatrix);
+            // this.toonProgram.setUniformMatrix4f("uViewMatrix", viewMatrix);
+            // this.toonProgram.setUniformMatrix4f("uProjectionMatrix", this.projectionMatrix);
+
+            // for (var index in entities) {
+            //     var entity = entities[index];
+
+            //     const modelMatrix = glMatrix.mat4.create();
+            //     glMatrix.mat4.translate(modelMatrix, modelMatrix, entity.position);
+            //     glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[0], [1, 0, 0]);
+            //     glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[1], [0, 1, 0]);
+            //     glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[2], [0, 0, 1]);
+
+            //     const normalMatrix = glMatrix.mat4.create();
+            //     glMatrix.mat4.invert(normalMatrix, modelMatrix);
+            //     glMatrix.mat4.transpose(normalMatrix, normalMatrix);
+
+            //     if(index == 0 || entity.meshName != entities[index-1].meshName) {
+            //         entity.mesh.vao.bind();
+            //         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, entity.mesh.indexBuffer);
+            //     }
+            //     // Set the shader uniforms
+            //     this.toonProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
+            //     this.toonProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
+
+            //     {
+            //         const vertexCount = entity.mesh.vertexCount;
+
+            //         this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
+
+            //     }
+
+            // }
+
             if(!this.renderBoundingBoxes) {
                 return;
             }
@@ -155,40 +191,6 @@ class Renderer {
                 }
 
             }
-
-            // this.gl.cullFace(this.gl.FRONT);
-            // this.toonProgram.bind();
-            // this.toonProgram.setUniformMatrix4f("uScaleMatrix", this.scaleMatrix);
-            // this.toonProgram.setUniformMatrix4f("uViewMatrix", viewMatrix);
-            // this.toonProgram.setUniformMatrix4f("uProjectionMatrix", this.projectionMatrix);
-
-            // for (var index in entities) {
-            //     var entity = entities[index];
-
-            //     const modelMatrix = glMatrix.mat4.create();
-            //     glMatrix.mat4.translate(modelMatrix, modelMatrix, entity.position);
-            //     glMatrix.mat4.rotate(modelMatrix, modelMatrix, entity.rotation[1], [0, 1, 0]);
-
-            //     const normalMatrix = glMatrix.mat4.create();
-            //     glMatrix.mat4.invert(normalMatrix, modelMatrix);
-            //     glMatrix.mat4.transpose(normalMatrix, normalMatrix);
-
-            //     if(index == 0 || entity.meshName != entities[index-1].meshName) {
-            //         entity.mesh.vao.bind();
-            //         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, entity.mesh.indexBuffer);
-            //     }
-            //     // Set the shader uniforms
-            //     this.toonProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
-            //     this.toonProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
-
-            //     {
-            //         const vertexCount = entity.mesh.vertexCount;
-
-            //         this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset);
-
-            //     }
-
-            // }
         }
 
 
