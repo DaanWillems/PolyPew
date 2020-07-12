@@ -5,12 +5,12 @@ class Octree {
         this.objects = [];
         this.allObjects = [];
         this.children = new Array(8);
-        this.minSize = 4;
-        this.maxItems = 1;
-        this.parent = null;
+        this.minSize = 8;
+        this.maxItems = 4;
         this.treeBuild = false;
         this.treeReady = false;
         this.octant = [];
+        this.childrenCount = 0;
 
         this.octant[0] = new BoundingBox(region.min, region.center);
         this.octant[1] = new BoundingBox(new glMatrix.vec3.fromValues(region.center[0], region.min[1], region.min[2]), new glMatrix.vec3.fromValues(region.max[0], region.center[1], region.center[2]));
@@ -22,28 +22,130 @@ class Octree {
         this.octant[7] = new BoundingBox(new glMatrix.vec3.fromValues(region.min[0], region.center[1], region.center[2]), new glMatrix.vec3.fromValues(region.center[0], region.max[1], region.max[2]));
     }
 
+    checkCollisions(parentObjects, intersectionList) {
+        parentObjects.forEach(o => {
+            this.objects.forEach(o1 => {
+                if (o != o1) {
+
+                    if (o.boundingBox.intersects(o1.boundingBox)) {
+                        var ir = {
+                            o1: o1,
+                            o: o,
+                        }
+
+                        o.animate = false;
+                        o1.animate = false;
+
+                        intersectionList.push(ir);
+                    }
+                }
+            })
+        })
+
+        this.objects.forEach(o => {
+            this.objects.forEach(o1 => {
+                if (o != o1) {
+                    if (o.boundingBox.intersects(o1.boundingBox)) {
+                        var ir = {
+                            o1: o1,
+                            o: o,
+                        }
+
+                        o.animate = false;
+                        o1.animate = false;
+
+
+                        intersectionList.push(ir);
+                    }
+                }
+            })
+        })
+
+        this.objects.forEach(o => {
+            parentObjects.push(o);
+        })
+
+        this.children.forEach(c => {
+            c.checkCollisions(parentObjects, intersectionList);
+        })
+
+        return intersectionList;
+    }
+
+    delete() {
+        for (var i = this.children.length - 1; i >= 0; i--) {
+            if (this.children[i] != null) {
+                if (this.children[i].objects.length == 0 && this.children[i].childrenCount == 0) {
+                    this.childrenCount--;
+                    this.children.splice(i, 1);
+                }
+            }
+        }
+
+        if (this.objects.length == 0 && this.childrenCount == 0) {
+            this.parent.delete();
+        }
+    }
+
     update() {
-        // this.children.forEach(c => {
-        //     c.update();
-        //     for (var i = this.objects.length - 1; i >= 0; i--) {
-        //         if(this.objects[i].needsUpdate) {
-        //             var obj = this.objects[i];
-        //             this.objects.splice(i, 1);
-        //             if(this.parent != null) {
-        //                 this.parent.insert(obj);
-        //             }
+        for (var i = this.children.length - 1; i >= 0; i--) {
+            if (this.children[i] == null) {
+                continue;
+            }
+            this.children[i].update();
+        }
+
+        var movedObjects = [];
+        var currentTree = this;
+        this.allObjects.forEach(o => {
+            if (o.needsUpdate) {
+                movedObjects.push(o);
+            }
+        })
+
+        for (var i = this.objects.length - 1; i >= 0; i--) {
+            var o = this.objects[i];
+
+            if (!o.needsUpdate) {
+                continue;
+            }
+
+            o.needsUpdate = false;
+
+            while (!currentTree.region.contains(o.boundingBox)) {
+                if (currentTree.parent != null) {
+                    currentTree = currentTree.parent;
+                } else {
+                    break;
+                }
+            }
+
+
+            this.objects.splice(i, 1);
+            currentTree.insert(o);
+
+            if (this.objects.length == 0 && this.childrenCount == 0) {
+                console.log("A leaf node that had object no longer has objects");
+                this.parent.delete();
+            }
+        }
+
+        // for (var i = this.objects.length - 1; i >= 0; i--) {
+        //     if (this.objects[i].needsUpdate) {
+        //         var obj = this.objects[i];
+        //         obj.needsUpdate = false;
+
+        //         this.objects.splice(i, 1);
+
+        //         if (this.parent != null) {
+        //             this.parent.insert(obj);
         //         }
         //     }
-        // })
-        this.children = new Array(8);
-        this.objects = [];
-        this.allObjects.forEach(o => {
-            this.insert(o);
-        })
+        // }
     }
 
     addObject(object) {
-        if(this.parent == null) {
+        if (this.parent == null) {
             this.allObjects.push(object);
         }
 
@@ -52,7 +154,7 @@ class Octree {
 
     insert(object) {
         var found = false;
- 
+
         //We cant go any smaller so just add the object here
         if (this.region.dimensions[0] <= this.minSize && this.region.dimensions[1] <= this.minSize && this.region.dimensions[2] <= this.minSize) {
             this.objects.push(object)
@@ -61,34 +163,25 @@ class Octree {
 
         if (!this.region.contains(object.boundingBox)) {
             if (this.parent) {
-                this.parent.objects.push(object);
+                this.parent.objects.push(object)
             }
             return;
         }
 
-        this.objects.push(object);
-
-        if (this.objects.length <= this.maxItems) {
-            return;
-        }
-
-        var tempObjects = this.objects;
-        this.objects = [];
-
-        tempObjects.forEach(o => {
-            for (var i = 0; i < 8; i++) {
-                if (this.octant[i].intersects(object.boundingBox)) {
-                    if (this.children[i] == null) {
-                        this.children[i] = new Octree(this, this.octant[i]);
-                    }
-                    this.children[i].insert(object);
-                    found = true;
+        for (var i = 0; i < 8; i++) {
+            if (this.octant[i].contains(object.boundingBox)) {
+                if (this.children[i] == null) {
+                    this.children[i] = new Octree(this, this.octant[i]);
+                    this.childrenCount++;
                 }
+                this.children[i].insert(object);
+                found = true;
             }
-            if (!found) {
-                this.objects.push(object)
-            }
-        })
+        }
+        if (!found) {
+            this.objects.push(object)
+        }
+        // })
     }
 
     buildTree() {

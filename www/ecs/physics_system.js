@@ -9,6 +9,10 @@ class PhysicsSystem {
     }
 
     update(deltaTime) {
+
+ 
+
+        
         this.entityManager.entities["drag"].forEach(e => {
             e.delta[0] *= this.drag;
             e.delta[2] *= this.drag;

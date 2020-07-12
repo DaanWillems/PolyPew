@@ -13,16 +13,20 @@ class GameState {
         player.position = glMatrix.vec3.fromValues(0, 2, 0);
         player.delta = glMatrix.vec3.fromValues(0, 0, 0);
         player.rotation = glMatrix.vec3.fromValues(0, 0, 0)
+        player.boundingBox = new BoundingBox(glMatrix.vec3.fromValues(-1, -1, -1), glMatrix.vec3.fromValues(1, 1, 1));
         player.jumping = 0;
         player.dashCooldown = 0;
         player.id = 0;
     
-        var map = new Map();
+        this.octree = new Octree(null, new BoundingBox(glMatrix.vec3.fromValues(-25, -25, -25), glMatrix.vec3.fromValues(25, 25, 25)));
+        var map = new Map(this.octree);
         map.objects.forEach(e => {
             this.entityManager.add(e);
             e.id = 0;
         })
+
         this.entityManager.add(player);
+        this.octree.addObject(player);
     }
 
     update(deltaTime) {

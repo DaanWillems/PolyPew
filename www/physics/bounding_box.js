@@ -1,7 +1,7 @@
 class BoundingBox {
     constructor(min, max) {
-        this.originalMin = min;
-        this.originalMax = max;
+        this.originalMin = JSON.parse(JSON.stringify(min));;
+        this.originalMax = JSON.parse(JSON.stringify(max));;
         this.min = min;
         this.max = max;
 
@@ -11,14 +11,13 @@ class BoundingBox {
         this.position = glMatrix.vec3.create();
 
         glMatrix.vec3.sub(this.dimensions, max, min);
-
         glMatrix.vec3.div(this.center, this.dimensions, [2, 2, 2]);
         glMatrix.vec3.add(this.center, this.min, this.center);
 
         var xScale = (this.max[0] - this.min[0]) / 1;
         var yScale = (this.max[1] - this.min[1]) / 1;
         var zScale = (this.max[2] - this.min[2]) / 1;
-        console.log(xScale);
+
         glMatrix.mat4.scale(this.scaleMatrix, this.scaleMatrix, [xScale, yScale, zScale]);
     }
 

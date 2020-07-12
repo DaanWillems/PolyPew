@@ -12,7 +12,6 @@ class Renderer {
             this.resize();
         });
 
-
         this.boundingCube = loadModel('cube1x1x1.obj');
         this.renderBoundingBoxes = false;
     }
@@ -88,6 +87,8 @@ class Renderer {
 
                 if (entity.animate) {
                     entity.position[0] += 0.01;
+                    // entity.position[1] -= 0.02;
+                    // entity.position[2] -= 0.02;
                     entity.needsUpdate = true;
                     entity.boundingBox.setPosition(entity.position);
                 }

@@ -2,7 +2,7 @@ class FreeInputSystem {
     constructor(entityManager) {
         const canvas = document.querySelector("#glCanvas");
         this.gl = canvas.getContext("webgl2");
-        this.locked = false;
+        this.locked = true;
         this.entityManager = entityManager;
         this.key = {
             _pressed: {},
@@ -39,7 +39,7 @@ class FreeInputSystem {
 
         window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
         window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
-        
+
         document.onmousemove = function (e) {
             rotation.dx += (e.movementX / 3000);
             rotation.dy += (e.movementY / 3000);
@@ -61,24 +61,24 @@ class FreeInputSystem {
     }
 
     lockChangeAlert() {
-        if(document.pointerLockElement === document.body ||
-        document.mozPointerLockElement === document.body) {
-            this.locked = true;
-        } else {
-            if(this.locked && this.stateMachine.currentState.constructor.name == "GameState") {
-                // this.stateMachine.changeState("mainMenu");
-            }
-            this.locked = false;
-        }
+        // if(document.pointerLockElement === document.body ||
+        // document.mozPointerLockElement === document.body) {
+        //     this.locked = true;
+        // } else {
+        //     if(this.locked && this.stateMachine.currentState.constructor.name == "GameState") {
+        //         this.stateMachine.changeState("mainMenu");
+        //     }
+        //     this.locked = false;
+        // }
     }
 
     update(deltaTime) {
-        if(this.key._pressed[this.key.ESC]) {
-            // stateMachine.changeState("mainMenu");
+        if (this.key._pressed[this.key.ESC]) {
+            stateMachine.changeState("mainMenu");
             return;
         }
 
-        if(!this.locked) {
+        if (!this.locked) {
             return;
         }
 
@@ -90,18 +90,18 @@ class FreeInputSystem {
             if (this.key._pressed[this.key.ASCEND]) {
                 if (e.delta[1] > -0.3) {
                     e.delta[1] += 0.05;
-                }            
+                }
             }
 
             if (this.key._pressed[this.key.Q]) {
-                document.body.exitPointerLock    ||
-                           document.body.mozExitPointerLock;
+                document.body.exitPointerLock ||
+                    document.body.mozExitPointerLock;
             }
 
             if (this.key._pressed[this.key.DESCEND]) {
                 if (e.delta[1] > -0.3) {
                     e.delta[1] -= 0.05;
-                }            
+                }
             }
 
             if (this.key._pressed[this.key.LEFT]) {
@@ -137,6 +137,11 @@ class FreeInputSystem {
 
             e.position[2] += delta[2];
 
+
+            if (e.delta[0] != 0 || e.delta[1] != 0 || e.delta[1] != 0) {
+                e.boundingBox.setPosition(e.position);
+                e.needsUpdate = true;
+            }
 
             e.rotation[0] = this.rotation.dx;
             e.rotation[1] = this.rotation.dy;
