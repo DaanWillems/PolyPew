@@ -136,10 +136,10 @@ class FreeInputSystem {
             }
 
             e.position[2] += delta[2];
+            e.boundingBox.setPosition(e.position);
 
 
             if (e.delta[0] != 0 || e.delta[1] != 0 || e.delta[1] != 0) {
-                e.boundingBox.setPosition(e.position);
                 e.needsUpdate = true;
             }
 

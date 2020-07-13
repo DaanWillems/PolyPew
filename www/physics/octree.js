@@ -33,8 +33,13 @@ class Octree {
                             o: o,
                         }
 
+                        console.log("Collision detected");
+
                         o.animate = false;
                         o1.animate = false;
+
+                        o.collided = true;
+                        o1.collided = true;
 
                         intersectionList.push(ir);
                     }
@@ -50,10 +55,12 @@ class Octree {
                             o1: o1,
                             o: o,
                         }
+                        console.log("Collision detected");
 
                         o.animate = false;
                         o1.animate = false;
-
+                        o.collided = true;
+                        o1.collided = true;
 
                         intersectionList.push(ir);
                     }

@@ -42,7 +42,6 @@ function loadModel(name) {
     model.position = glMatrix.vec3.fromValues(0, 0, 0);
     model.rotation = glMatrix.vec3.fromValues(0, 0, 0);
     model.components = ['render', 'position', 'velocity']
-    model.animate = false;
     model.boundingBox = BoundingBox.fromVertices(mesh.vertices);
     model.needsUpdate = true;
 

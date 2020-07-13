@@ -14,6 +14,13 @@ class PhysicsSystem {
 
         
         this.entityManager.entities["drag"].forEach(e => {
+            if(e.collided) {
+                e.delta[0] = 0;
+                e.delta[1] = 0;
+                e.delta[2] = 0;
+                return;
+            }
+
             e.delta[0] *= this.drag;
             e.delta[2] *= this.drag;
             if (e.delta[0] > -0.01 && e.delta[0] < 0.01) {

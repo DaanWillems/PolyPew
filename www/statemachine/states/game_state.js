@@ -7,13 +7,15 @@ class GameState {
         this.systemManager.add(new FreeInputSystem(this.entityManager));
         this.systemManager.add(new FreePhysicsSystem(this.entityManager));
         this.systemManager.add(new OnlineSystem(this.entityManager));
-    
+        
+        var test = loadModel("cube1x1x1.obj");
         var player = new Entity();
         player.components = ['camera', 'input', 'position', 'velocity', 'drag']
         player.position = glMatrix.vec3.fromValues(0, 2, 0);
         player.delta = glMatrix.vec3.fromValues(0, 0, 0);
         player.rotation = glMatrix.vec3.fromValues(0, 0, 0)
-        player.boundingBox = new BoundingBox(glMatrix.vec3.fromValues(-1, -1, -1), glMatrix.vec3.fromValues(1, 1, 1));
+        player.boundingBox = BoundingBox.fromVertices(test.mesh.vertices);
+        player.boundingBox.setPosition(player.position);
         player.jumping = 0;
         player.dashCooldown = 0;
         player.id = 0;

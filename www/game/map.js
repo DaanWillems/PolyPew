@@ -6,28 +6,37 @@ class Map {
         var y = 0;
         this.octree = octree;
 
-        for (var j = -5.4; j < 7.4; j++) {
-            for (var i = -5.4; i < 7.4; i++) {
-                var entity = loadModel('cube1x1x1.obj');
-                entity.position[0] = -15.7;
-                entity.position[1] = 3 * j
-                entity.position[2] = 3 * i;
-                entity.animate = true;
-                entity.boundingBox.setPosition(entity.position);
-                this.objects.push(entity);
-                this.octree.addObject(entity);
+        var entity = loadModel('cube1x1x1.obj');
+        entity.position[0] = -6;
+        entity.position[1] = 6;
+        entity.position[2] = 6;
+        entity.animate = false;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
 
-                var entity = loadModel('cube1x1x1.obj');
-                entity.position[0] = -5.7;
-                entity.position[1] = 3 * j;
-                entity.position[2] = 3 * i;
-                entity.animate = false;
-                entity.boundingBox.setPosition(entity.position);
+        // for (var j = -5.4; j < 7.4; j++) {
+        //     for (var i = -5.4; i < 7.4; i++) {
+        //         var entity = loadModel('mathijs.obj');
+        //         entity.position[0] = -15.7;
+        //         entity.position[1] = 10 * j
+        //         entity.position[2] = 3 * i;
+        //         entity.animate = true;
+        //         entity.boundingBox.setPosition(entity.position);
+        //         this.objects.push(entity);
+        //         this.octree.addObject(entity);
 
-                this.objects.push(entity);
-                this.octree.addObject(entity);
-            }
-        }
+        //         var entity = loadModel('cube1x1x1.obj');
+        //         entity.position[0] = -5.7;
+        //         entity.position[1] = 3 * j;
+        //         entity.position[2] = 3 * i;
+        //         entity.animate = false;
+        //         entity.boundingBox.setPosition(entity.position);
+
+        //         this.objects.push(entity);
+        //         this.octree.addObject(entity);
+        //     }
+        // }
 
         var octreeEntity = new Entity();
         octreeEntity.octree = this.octree;

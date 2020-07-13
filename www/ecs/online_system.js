@@ -51,21 +51,23 @@ class OnlineSystem {
                 self.entityManager.entities["player"].forEach(p => {
                     if (p.id == id[i]) {
                         p.position[0] = position[i + 1];
-                        p.position[1] = position[i + 2] - 1;
+                        p.position[1] = position[i + 2];
                         p.position[2] = position[i + 3];
+                        p.boundingBox.setPosition(p.position);
                         found = true;
                         return;
                     }
                 })
 
                 if (!found && id[i] != 0) {
-                    var player = loadModel('sphere.obj');
+                    var player = loadModel('cube1x1x1.obj');
                     player.components.push('player');
                     player.id = id[i];
                     player.position = glMatrix.vec3.fromValues(0, 2, 0);
                     player.rotation = glMatrix.vec3.fromValues(0, 0, 0)
                     entityManager.add(player);
                     console.log(id[i] + ": " + position[i + 1])
+                    entityManager.entities["octree"][0].octree.insert(player);
                 }
             }
         };
