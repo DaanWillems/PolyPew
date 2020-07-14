@@ -3,10 +3,10 @@ class GameState {
         this.entityManager = new EntityManager();
     
         this.systemManager = new SystemManager(this.entityManager);
-        this.systemManager.add(new RenderSystem(this.entityManager));
-        this.systemManager.add(new FreeInputSystem(this.entityManager));
-        this.systemManager.add(new FreePhysicsSystem(this.entityManager));
+        this.systemManager.add(new PhysicsSystem(this.entityManager));
+        this.systemManager.add(new InputSystem(this.entityManager));
         this.systemManager.add(new OnlineSystem(this.entityManager));
+        this.systemManager.add(new RenderSystem(this.entityManager));
         
         var test = loadModel("cube1x1x1.obj");
         var player = new Entity();

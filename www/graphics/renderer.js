@@ -160,7 +160,7 @@ class Renderer {
 
             if (octree) {
                 var octree = octree[0];
-                this.renderOctree(octree.octree);
+                // this.renderOctree(octree.octree);
             }
 
 
@@ -227,7 +227,8 @@ class Renderer {
         this.testProgram.setUniformMatrix4f("uModelMatrix", modelMatrix);
         this.testProgram.setUniformMatrix4f("uNormalMatrix", normalMatrix);
         this.testProgram.setUniformVec3f("uColor", [0, 0, 0]);
-
+        this.boundingCube.mesh.vao.bind();
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.boundingCube.mesh.indexBuffer);
         {
             const vertexCount = this.boundingCube.mesh.vertexCount;
             this.gl.drawElements(this.gl.LINE_STRIP, vertexCount, type, offset);

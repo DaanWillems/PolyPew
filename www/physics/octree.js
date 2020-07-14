@@ -27,19 +27,47 @@ class Octree {
             this.objects.forEach(o1 => {
                 if (o != o1) {
 
+                    // if(o.delta[0] == 0 && o.delta[1] == 0 && o.delta[2] == 0) {
+                    //     return;
+                    // }
+
                     if (o.boundingBox.intersects(o1.boundingBox)) {
                         var ir = {
                             o1: o1,
                             o: o,
                         }
 
-                        console.log("Collision detected");
+                        if (o.boundingBox.max[0] > o1.boundingBox.min[0] && o.boundingBox.max[0] < o1.boundingBox.max[0]) {
+                            o.xDepth = -(o.boundingBox.max[0] - o1.boundingBox.min[0]);
+                        }
+
+                        if (o.boundingBox.max[2] > o1.boundingBox.min[2] && o.boundingBox.max[2] < o1.boundingBox.max[2]) {
+                            o.zDepth = -(o.boundingBox.max[2] - o1.boundingBox.min[2]);
+                        }
+                        
+                        if (o.boundingBox.max[1] > o1.boundingBox.min[1] && o.boundingBox.max[1] < o1.boundingBox.max[1]) {
+                            o.yDepth = -(o.boundingBox.max[1] - o1.boundingBox.min[1]);
+                        }
+
+                        if (o.boundingBox.min[0] > o1.boundingBox.min[0] && o.boundingBox.min[0] < o1.boundingBox.max[0]) {
+                            o.xDepth = o1.boundingBox.max[0] - o.boundingBox.min[0];
+                        }
+
+                        if (o.boundingBox.min[2] > o1.boundingBox.min[2] && o.boundingBox.min[2] < o1.boundingBox.max[2]) {
+                            o.zDepth = o1.boundingBox.max[2] - o.boundingBox.min[2];
+                        }
+
+                        if (o.boundingBox.min[1] > o1.boundingBox.min[1] && o.boundingBox.min[1] < o1.boundingBox.max[1]) {
+                            o.yDepth = o1.boundingBox.max[1] - o.boundingBox.min[1];
+                        }
+
+
 
                         o.animate = false;
                         o1.animate = false;
 
                         o.collided = true;
-                        o1.collided = true;
+                        // o1.collided = true;
 
                         intersectionList.push(ir);
                     }
@@ -55,12 +83,38 @@ class Octree {
                             o1: o1,
                             o: o,
                         }
-                        console.log("Collision detected");
+                      
+                        if (o.boundingBox.max[0] > o1.boundingBox.min[0] && o.boundingBox.max[0] < o1.boundingBox.max[0]) {
+                            o.xDepth = -(o.boundingBox.max[0] - o1.boundingBox.min[0]);
+                        }
+
+                        if (o.boundingBox.max[2] > o1.boundingBox.min[2] && o.boundingBox.max[2] < o1.boundingBox.max[2]) {
+                            o.zDepth = -(o.boundingBox.max[2] - o1.boundingBox.min[2]);
+                        }
+                        
+                        if (o.boundingBox.max[1] > o1.boundingBox.min[1] && o.boundingBox.max[1] < o1.boundingBox.max[1]) {
+                            o.yDepth = -(o.boundingBox.max[1] - o1.boundingBox.min[1]);
+                        }
+
+                        if (o.boundingBox.min[0] > o1.boundingBox.min[0] && o.boundingBox.min[0] < o1.boundingBox.max[0]) {
+                            o.xDepth = o1.boundingBox.max[0] - o.boundingBox.min[0];
+                        }
+
+                        if (o.boundingBox.min[2] > o1.boundingBox.min[2] && o.boundingBox.min[2] < o1.boundingBox.max[2]) {
+                            o.zDepth = o1.boundingBox.max[2] - o.boundingBox.min[2];
+                        }
+
+                        if (o.boundingBox.min[1] > o1.boundingBox.min[1] && o.boundingBox.min[1] < o1.boundingBox.max[1]) {
+                            o.yDepth = o1.boundingBox.max[1] - o.boundingBox.min[1];
+                        }
+
+
 
                         o.animate = false;
                         o1.animate = false;
+
                         o.collided = true;
-                        o1.collided = true;
+                        // o1.collided = true;
 
                         intersectionList.push(ir);
                     }

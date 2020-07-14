@@ -3,7 +3,7 @@ class OnlineSystem {
         this.entityManager = entityManager;
         this.id = Math.floor(Math.random() * Math.floor(200));
 
-        this.conn = new WebSocket("ws://78.141.219.233:8000");
+        this.conn = new WebSocket("ws://localhost:8000");
         this.conn.binaryType = 'arraybuffer';
         this.conn.onclose = function (evt) {
             console.log("Connection closed");

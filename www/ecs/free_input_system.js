@@ -125,19 +125,6 @@ class FreeInputSystem {
                 }
             }
 
-            var delta = glMatrix.vec3.create();
-            glMatrix.vec3.rotateX(delta, e.delta, [0, 0, 0], -this.rotation.dy);
-            glMatrix.vec3.rotateY(delta, e.delta, [0, 0, 0], -this.rotation.dx);
-
-            e.position[0] += delta[0];
-            e.position[1] += delta[1];
-            if (e.position[1] < 0) {
-                e.position[1] = 0;
-            }
-
-            e.position[2] += delta[2];
-            e.boundingBox.setPosition(e.position);
-
 
             if (e.delta[0] != 0 || e.delta[1] != 0 || e.delta[1] != 0) {
                 e.needsUpdate = true;

@@ -2,7 +2,7 @@ class InputSystem {
     constructor(entityManager) {
         const canvas = document.querySelector("#glCanvas");
         this.gl = canvas.getContext("webgl2");
-        this.locked = false;
+        this.locked = true;
         this.entityManager = entityManager;
         this.key = {
             _pressed: {},
@@ -61,15 +61,15 @@ class InputSystem {
     }
 
     lockChangeAlert() {
-        if(document.pointerLockElement === document.body ||
-        document.mozPointerLockElement === document.body) {
-            this.locked = true;
-        } else {
-            if(this.locked && this.stateMachine.currentState.constructor.name == "GameState") {
-                this.stateMachine.changeState("mainMenu");
-            }
-            this.locked = false;
-        }
+        // if(document.pointerLockElement === document.body ||
+        // document.mozPointerLockElement === document.body) {
+        //     this.locked = true;
+        // } else {
+        //     if(this.locked && this.stateMachine.currentState.constructor.name == "GameState") {
+        //         this.stateMachine.changeState("mainMenu");
+        //     }
+        //     this.locked = false;
+        // }
     }
 
     update(deltaTime) {
@@ -128,14 +128,6 @@ class InputSystem {
             var delta = glMatrix.vec3.create();
             glMatrix.vec3.rotateX(delta, e.delta, [0, 0, 0], -this.rotation.dy);
             glMatrix.vec3.rotateY(delta, e.delta, [0, 0, 0], -this.rotation.dx);
-
-            e.position[0] += delta[0];
-            e.position[1] += delta[1];
-            if (e.position[1] < 0) {
-                e.position[1] = 0;
-            }
-
-            e.position[2] += delta[2];
 
 
             e.rotation[0] = this.rotation.dx;
