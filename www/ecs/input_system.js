@@ -94,6 +94,7 @@ class InputSystem {
                 e.delta[0] *= 1.5;
                 e.canJump = false;
                 e.timeSinceJump = 0;
+                this.key._pressed[this.key.SPACE] = false;
             }
 
             e.dashCooldown -= 0.1;

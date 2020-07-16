@@ -75,11 +75,11 @@ class PhysicsSystem {
                         if (e.timeSinceJump > 500) {
                             e.canJump = true;
                         }
+                        e.delta[1] = 0.00001;
                     } else {
                         e.delta[1] = 0;
                     }
                     e.position[1] += e.yDepth;
-                    e.delta[1] = 0.00001;
                 }
                 e.collided = false;
                 e.boundingBox.setPosition(e.position);
