@@ -9,7 +9,7 @@ class Map {
         var entity = loadModel('cube2x1x2.obj');
         entity.position[0] = -6;
         entity.position[1] = 0;
-        entity.position[2] = 6;
+        entity.position[2] = -18;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
         this.objects.push(entity);
@@ -18,7 +18,7 @@ class Map {
         var entity = loadModel('cube2x1x2.obj');
         entity.position[0] = -6;
         entity.position[1] = 1;
-        entity.position[2] = 12;
+        entity.position[2] = -12;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
         this.objects.push(entity);
@@ -28,7 +28,25 @@ class Map {
         var entity = loadModel('cube2x1x2.obj');
         entity.position[0] = -6;
         entity.position[1] = 2;
-        entity.position[2] = 18;
+        entity.position[2] = -6;
+        entity.animate = false;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+
+        var entity = loadModel('tower.obj');
+        entity.position[0] = -10;
+        entity.position[1] = 0;
+        entity.position[2] = 0;
+        entity.animate = false;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+
+        var entity = loadModel('tower.obj');
+        entity.position[0] = -10;
+        entity.position[1] = 0;
+        entity.position[2] = 8;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
         this.objects.push(entity);

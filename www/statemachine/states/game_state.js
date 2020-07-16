@@ -16,7 +16,8 @@ class GameState {
         player.rotation = glMatrix.vec3.fromValues(0, 0, 0)
         player.boundingBox = BoundingBox.fromVertices(test.mesh.vertices);
         player.boundingBox.setPosition(player.position);
-        player.jumping = 0;
+        player.canJump = true;
+        player.timeSinceJump = 0;
         player.dashCooldown = 0;
         player.id = 0;
     

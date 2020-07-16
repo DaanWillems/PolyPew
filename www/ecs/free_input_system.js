@@ -84,7 +84,7 @@ class FreeInputSystem {
 
         this.entityManager.entities["camera"].forEach(e => {
             if (e.position[1] <= 0) {
-                e.jumping = 0;
+                e.canJump = true;
             }
 
             if (this.key._pressed[this.key.ASCEND]) {

@@ -84,14 +84,15 @@ class InputSystem {
 
         this.entityManager.entities["camera"].forEach(e => {
             if (e.position[1] <= 0) {
-                e.jumping = 0;
+                e.canJump = true;
             }
 
-            if (this.key._pressed[this.key.SPACE] && e.jumping < 2) {
+            if (this.key._pressed[this.key.SPACE] && e.canJump) {
                 e.delta[1] = 0.25;
                 e.delta[2] *= 1.5;
                 e.delta[0] *= 1.5;
-                e.jumping++;
+                e.canJump = false;
+                e.timeSinceJump = 0;
             }
 
             e.dashCooldown -= 0.1;
