@@ -21,7 +21,7 @@ class GameState {
         player.dashCooldown = 0;
         player.id = 0;
     
-        this.octree = new Octree(null, new BoundingBox(glMatrix.vec3.fromValues(-25, -25, -25), glMatrix.vec3.fromValues(25, 25, 25)));
+        this.octree = new Octree(null, new BoundingBox(glMatrix.vec3.fromValues(-25, -25, -45), glMatrix.vec3.fromValues(25, 35, 25)));
         var map = new Map(this.octree);
         map.objects.forEach(e => {
             this.entityManager.add(e);

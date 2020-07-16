@@ -10,12 +10,12 @@ class PhysicsSystem {
 
     update(deltaTime) {
         this.entityManager.entities["drag"].forEach(e => {
-            e.timeSinceJump += deltaTime;
-
-            if(e.timeSinceJump > 500) {
+            if (!e.wallRiding) {
+                e.timeSinceJump += deltaTime;
+            }
+            if (e.timeSinceJump > 500) {
                 e.canJump = true;
             }
-
             var delta = glMatrix.vec3.create();
             glMatrix.vec3.rotateX(delta, e.delta, [0, 0, 0], -e.rotation[1]);
             glMatrix.vec3.rotateY(delta, e.delta, [0, 0, 0], -e.rotation[0]);
@@ -41,7 +41,7 @@ class PhysicsSystem {
 
             if (e.wallRiding) {
                 if (e.delta[1] < -0.01) {
-                    e.delta[1] = -0.01;
+                    e.delta[1] = -0.05;
                 }
             }
 
@@ -59,30 +59,41 @@ class PhysicsSystem {
         }
 
         this.entityManager.entities["drag"].forEach(e => {
-            e.wallRiding = false;
+            var wallRiding = false;
             if (e.collided) {
                 if (Math.abs(e.xDepth) < Math.abs(e.zDepth) && Math.abs(e.xDepth) < Math.abs(e.yDepth)) {
                     e.delta[0] = 0;
                     e.position[0] += e.xDepth;
-                    e.wallRiding = true;
-                    console.log(e.wallRiding);
+                    wallRiding = true;
                 } else if (Math.abs(e.zDepth) < Math.abs(e.yDepth) && Math.abs(e.zDepth) < Math.abs(e.xDepth)) {
                     e.delta[2] = 0;
                     e.position[2] += e.zDepth;
-                    e.wallRiding = true;
-                    console.log(e.wallRiding);
+                    wallRiding = true;
                 } else {
-                    if (e.yDepth < 0) {
-                        e.delta[1] = 0;
+                    if (e.yDepth > 0) {
+
                     } else {
-                        e.canJump = true;
+                        e.delta[1] = 0;
                     }
                     e.position[1] += e.yDepth;
+                    e.delta[1] = 0.00001;
                 }
-
                 e.collided = false;
                 e.boundingBox.setPosition(e.position);
+
             }
+            if (e.wallRiding && !wallRiding) {
+                e.canJump = true;
+            } else if (!e.wallRiding && wallRiding) {
+                e.canJump = true;
+            }
+
+            if (wallRiding) {
+                e.wallRiding = true;
+            } else {
+                e.wallRiding = false;
+            }
+
         });
 
 

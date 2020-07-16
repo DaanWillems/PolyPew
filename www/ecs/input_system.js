@@ -3,6 +3,7 @@ class InputSystem {
         const canvas = document.querySelector("#glCanvas");
         this.gl = canvas.getContext("webgl2");
         this.locked = true;
+        this.maxSpeed = 0.25;
         this.entityManager = entityManager;
         this.key = {
             _pressed: {},
@@ -88,7 +89,7 @@ class InputSystem {
             }
 
             if (this.key._pressed[this.key.SPACE] && e.canJump) {
-                e.delta[1] = 0.25;
+                e.delta[1] = 0.33;
                 e.delta[2] *= 1.5;
                 e.delta[0] *= 1.5;
                 e.canJump = false;
@@ -106,22 +107,22 @@ class InputSystem {
             }
 
             if (this.key._pressed[this.key.LEFT]) {
-                if (e.delta[0] > -0.3) {
+                if (e.delta[0] > -this.maxSpeed) {
                     e.delta[0] -= 0.05;
                 }
             }
             if (this.key._pressed[this.key.UP]) {
-                if (e.delta[2] > -0.3) {
+                if (e.delta[2] > -this.maxSpeed) {
                     e.delta[2] -= 0.05;
                 }
             }
             if (this.key._pressed[this.key.RIGHT]) {
-                if (e.delta[0] < 0.3) {
+                if (e.delta[0] < this.maxSpeed) {
                     e.delta[0] += 0.05;
                 }
             }
             if (this.key._pressed[this.key.DOWN]) {
-                if (e.delta[2] < 0.3) {
+                if (e.delta[2] < this.maxSpeed) {
                     e.delta[2] += 0.05;
                 }
             }

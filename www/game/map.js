@@ -17,7 +17,7 @@ class Map {
 
         var entity = loadModel('cube2x1x2.obj');
         entity.position[0] = -6;
-        entity.position[1] = 1;
+        entity.position[1] = 1.5;
         entity.position[2] = -12;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
@@ -27,7 +27,7 @@ class Map {
         
         var entity = loadModel('cube2x1x2.obj');
         entity.position[0] = -6;
-        entity.position[1] = 2;
+        entity.position[1] = 3;
         entity.position[2] = -6;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
@@ -36,8 +36,8 @@ class Map {
 
         var entity = loadModel('tower.obj');
         entity.position[0] = -10;
-        entity.position[1] = 0;
-        entity.position[2] = 0;
+        entity.position[1] = 4;
+        entity.position[2] = -8;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
         this.objects.push(entity);
@@ -45,8 +45,36 @@ class Map {
 
         var entity = loadModel('tower.obj');
         entity.position[0] = -10;
-        entity.position[1] = 0;
-        entity.position[2] = 8;
+        entity.position[1] = 4;
+        entity.position[2] = 0;
+        entity.animate = false;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+
+        
+        var entity = loadModel('wall.obj');
+        entity.position[0] = -15;
+        entity.position[1] = 28;
+        entity.position[2] = -20;
+        entity.animate = false;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+
+        var entity = loadModel('wall.obj');
+        entity.position[0] = -15;
+        entity.position[1] = 30;
+        entity.position[2] = -20;
+        entity.animate = false;
+        entity.boundingBox.setPosition(entity.position);
+        this.objects.push(entity);
+        this.octree.addObject(entity);
+
+        var entity = loadModel('cube2x1x2.obj');
+        entity.position[0] = -10;
+        entity.position[1] = 24;
+        entity.position[2] = -33;
         entity.animate = false;
         entity.boundingBox.setPosition(entity.position);
         this.objects.push(entity);
