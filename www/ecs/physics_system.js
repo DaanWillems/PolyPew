@@ -13,9 +13,7 @@ class PhysicsSystem {
             if (!e.wallRiding) {
                 e.timeSinceJump += deltaTime;
             }
-            if (e.timeSinceJump > 500) {
-                e.canJump = true;
-            }
+
             var delta = glMatrix.vec3.create();
             glMatrix.vec3.rotateX(delta, e.delta, [0, 0, 0], -e.rotation[1]);
             glMatrix.vec3.rotateY(delta, e.delta, [0, 0, 0], -e.rotation[0]);
@@ -25,6 +23,9 @@ class PhysicsSystem {
 
             if (e.position[1] < 0) {
                 e.position[1] = 0;
+                if (e.timeSinceJump > 500) {
+                    e.canJump = true;
+                }
             }
 
             e.position[2] += delta[2];
@@ -71,7 +72,9 @@ class PhysicsSystem {
                     wallRiding = true;
                 } else {
                     if (e.yDepth > 0) {
-
+                        if (e.timeSinceJump > 500) {
+                            e.canJump = true;
+                        }
                     } else {
                         e.delta[1] = 0;
                     }
